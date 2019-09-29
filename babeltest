@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+ <head>
+ <meta charset="UTF-8">
+<link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.6.2/babel.min.js"></script>
+
+ <title>Document</title>
+
+<script type="text/babel">
+  var firstval = [{text: '과일', value: 'FRUIT'},{text: '채소', value: 'VEGETABLE'}];
+  var secondval = {'FRUIT':[{text: '사과', value: 'APPLE'}, {text: '오렌지', value: 'ORANGE'}],'VEGETABLE':[{text: '상추', value: 'LETTUCE'}, {text: '마늘', value: 'GALIC'}]};
+
+  var Grid = tui.Grid;
+
+$(function(){
+
+	const gridData = [
+    {
+      c1: '100013',
+      c2: '',
+      c3: ''
+    },
+    {
+      c1: '201212',
+      c2: '',
+      c3: ''
+    }
+  ];
+
+  const grid = new tui.Grid({
+		el: document.getElementById('grid'),
+		editingEvent: 'click',
+		scrollX: false,
+		scrollY: false,
+		data: gridData,
+		columns: [
+			{
+				header: 'Name',
+				name: 'c1'
+			},
+			{
+				header: 'first',
+				name: 'c2',
+				formatter: 'listItemText',
+				editor : {
+					type: 'select',
+					options : {
+						listItems: []
+					}
+				},
+				relations: [
+					{
+						targetNames: ['c3'],
+						listItems({ value }) {
+							return secondval[value];
+						},
+						disabled({ value }) {
+							return !(value);
+						}
+					}
+				]
+			},
+			{
+				header: 'normalselect',
+				name: 'c3',
+				formatter: 'listItemText',
+				editor : {
+					type: 'select',
+					options : {
+						listItems: []
+					}
+				}
+			}
+		]
+  });
+
+	let c2col = grid.getColumns()[1].editor.options.listItems;
+	let fn = firstval.length;
+	let fitem;
+	for(let i=0; i < fn; i++){
+		fitem = firstval[i];
+		c2col.push(fitem);
+	}
+
+});
+  
+
+</script>
+</head>
+
+<body>
+
+ <p>grid test</p>
+
+  <div id="grid"></div>
+
+</body>
+</html>
