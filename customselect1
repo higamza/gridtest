@@ -88,6 +88,9 @@ $(function(){
 							{text: '테스트2', value: 'test2'}
 						]
 					}
+				},
+				onAfterChange(ev){
+					alert('1');
 				}
 			}
 		]
