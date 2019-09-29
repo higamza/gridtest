@@ -1,101 +1,111 @@
 <!doctype html>
-<html>
+<html lang="en">
  <head>
  <meta charset="UTF-8">
 <link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7.6.2/babel.min.js"></script>
-
  <title>Document</title>
-
-<script type="text/babel">
-  var firstval = [{text: '과일', value: 'FRUIT'},{text: '채소', value: 'VEGETABLE'}];
-  var secondval = {'FRUIT':[{text: '사과', value: 'APPLE'}, {text: '오렌지', value: 'ORANGE'}],'VEGETABLE':[{text: '상추', value: 'LETTUCE'}, {text: '마늘', value: 'GALIC'}]};
-
-  var Grid = tui.Grid;
-
-$(function(){
-
-	const gridData = [
-    {
-      c1: '100013',
+ <script type="text/babel">
+ function fnTest(){
+	 alert('button test');
+}
+ function addRow(){
+	 var row ={
+      c1: '',
       c2: '',
-      c3: ''
-    },
-    {
-      c1: '201212',
-      c2: '',
-      c3: ''
+      c3: 1
     }
-  ];
-
-  const grid = new tui.Grid({
-		el: document.getElementById('grid'),
-		editingEvent: 'click',
-		scrollX: false,
-		scrollY: false,
-		data: gridData,
-		columns: [
-			{
-				header: 'Name',
-				name: 'c1'
-			},
-			{
-				header: 'first',
-				name: 'c2',
-				formatter: 'listItemText',
-				editor : {
-					type: 'select',
-					options : {
-						listItems: []
-					}
-				},
-				relations: [
-					{
-						targetNames: ['c3'],
-						listItems({ value }) {
-							return secondval[value];
-						},
-						disabled({ value }) {
-							return !(value);
-						}
-					}
-				]
-			},
-			{
-				header: 'normalselect',
-				name: 'c3',
-				formatter: 'listItemText',
-				editor : {
-					type: 'select',
-					options : {
-						listItems: []
-					}
-				}
-			}
-		]
-  });
-
-	let c2col = grid.getColumns()[1].editor.options.listItems;
-	let fn = firstval.length;
-	let fitem;
-	for(let i=0; i < fn; i++){
-		fitem = firstval[i];
-		c2col.push(fitem);
-	}
-
-});
-  
-
-</script>
+	grid.appendRow(row);
+	var gn =  grid.getRowCount();
+	grid.startEditing(gn-1, 'c1', true);
+ }
+ </script>
 </head>
 
 <body>
 
  <p>grid test</p>
-
+ <button id="addBtn" onclick="addRow();">ADD</button>
   <div id="grid"></div>
+<script>
+  var Grid = tui.Grid;
+  class CustomButtonRenderer {
+		constructor(props) {
+			const el = document.createElement('input');
+			const { value, onclick } = props.columnInfo.renderer.options;
 
+			el.type = 'button';
+			el.value = String(value);
+			el.addEventListener('click', (ev) => {
+			  fnTest();
+			});
+
+			this.el = el;
+			this.render(props);
+		}
+
+		getElement() {
+			return this.el;
+		}
+
+		render(props) {
+			//this.el.value = value;
+			//this.el.onclick = fnTest();
+		}
+	}
+	const gridData = [
+    {
+      c1: '100013',
+      c2: 'Mustafa Cosme',
+      c3: 291232
+    },
+    {
+      c1: '201212',
+      c2: 'Gunnar Fausto',
+      c3: 32123
+    }
+  ];
+
+  const grid = new tui.Grid({
+    el: document.getElementById('grid'),
+    scrollX: false,
+    scrollY: false,
+    rowHeight: 35,
+	data: gridData,
+    rowHeaders: ['rowNum'],
+    header: {
+      height: 40
+    },
+    columns: [
+      {
+        header: 'ID',
+        name: 'c1',
+		editor : 'text',
+		onAfterChange(ev){
+			alert('1');
+		}
+      },
+      {
+        header: 'Name',
+        defaultValue: 2,
+        name: 'c2',
+		editor : 'text'
+      },
+      {
+        header: 'Score',
+        name: 'c3',
+		renderer: {
+					type: CustomButtonRenderer,
+					options: {
+						value: 'link',
+						onclick: 'fnTest()'
+					}
+				}
+      }
+    ]
+  });
+
+ </script>
 </body>
 </html>
