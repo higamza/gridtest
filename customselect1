@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+ <head>
+ <meta charset="UTF-8">
+<link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+ <title>Document</title>
+
+<script type="text/javascript" charset="utf-8">
+  var firstval = [{label: '과일', value: 'FRUIT'},{label: '채소', value: 'VEGETABLE'}];
+  var secondval = [{type: 'FRUIT', label: '사과', value: 'APPLE'}, {type: 'FRUIT', label: '오렌지', value: 'ORANGE'},{type: 'VEGETABLE', label: '상추', value: 'LETTUCE'}, {type: 'VEGETABLE', label: '마늘', value: 'GALIC'}];
+
+  var Grid = tui.Grid;
+
+$(function(){
+	class CustomEditorFirstSelect {
+		constructor(props) {
+			const el = document.createElement('select');
+		
+			let fn = firstval.length;
+			let fitem;
+			for(let i=0; i < fn; i++){
+				fitem = firstval[i];
+				el.append(new Option(fitem.label, fitem.value));
+			}
+
+			this.el = el;
+		}
+
+		getElement() {
+			return this.el;
+		}
+
+		getValue() {
+			return this.el.value;
+		}
+
+		mounted() {
+			//this.el.select();
+		}
+	}
+
+
+	const gridData = [
+    {
+      c1: '100013',
+      c2: '',
+      c3: 1,
+			c4: 'test1'
+    },
+    {
+      c1: '201212',
+      c2: '',
+      c3: 2,
+			c4: 'test2'
+    }
+  ];
+
+  const grid = new tui.Grid({
+		el: document.getElementById('grid'),
+		editingEvent: 'click',
+		scrollX: false,
+		scrollY: false,
+		data: gridData,
+		columns: [
+			{
+				header: 'Name',
+				name: 'c1'
+			},
+			{
+				header: 'first',
+				name: 'c2',
+				editor: {
+						type: CustomEditorFirstSelect
+					}
+			},
+			{
+				header: 'normalselect',
+				name: 'c4',
+				formatter: 'listItemText',
+				editor : {
+					type: 'select',
+					options : {
+						listItems: [
+							{text: '테스트1', value: 'test1'},
+							{text: '테스트2', value: 'test2'}
+						]
+					}
+				}
+			}
+		]
+  });
+
+});
+  
+
+</script>
+</head>
+
+<body>
+
+ <p>grid test</p>
+
+  <div id="grid"></div>
+
+</body>
+</html>
